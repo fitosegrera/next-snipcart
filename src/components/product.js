@@ -9,11 +9,10 @@ function Product (product){
         <img src={product.image} alt="" className={styles.product__image}/>
         <h2 className={styles.product__title}>{product.name}</h2>
         <p className={styles.product__description}>{product.description}</p>
-        <div className="product__price-button-container">
-            <div className="product__price">${product.price}</div>
+        <div>
+            <div className={styles.product__price}>COP$ {product.price}</div>
             <button 
                 className="snipcart-add-item"
-                // className={styles.product_button}
                 data-item-id={product.id}
                 data-item-name={product.name}
                 data-item-price={product.price}

@@ -6,11 +6,12 @@ import { Client } from '../prismic-configuration'
 // import ProductList from "../src/components/product-list"
 import Product from "../src/components/product"
 
-export default function Home({ allHomepage, IIndexProps }) {
+export default function Home({ allHomepage, allProducts }) {
   const homePage = JSON.parse(allHomepage).results
   const categoryNavigation = homePage[0].data['category-navigation']
-  console.log(categoryNavigation)
-  console.log(IIndexProps)
+  const products = JSON.parse(allProducts).results
+  console.log("categoryNavigation", categoryNavigation)
+  console.log("products", products[0].data)
   return (
     <div className={styles.container}>
       <Head>
@@ -33,13 +34,13 @@ export default function Home({ allHomepage, IIndexProps }) {
         </div>
         </>
         <>
-          {categoryNavigation.map((category) => (
-              <Product name="Test Product" 
-              id="test-product"
+          {products.map((product) => (
+              <Product name={product.data.name[0].text}
+              id={product.uid}
               url="/"
-              description="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
-              image="/thumbnail.jpg"
-              price="10.2"
+              description={product.data.description[0].text}
+              image={product.data.thumbnail.url}
+              price={product.data.price}
               />
           ))}
         </>
@@ -54,10 +55,14 @@ export async function getStaticProps({ params }) {
   const allHomepage = await client.query(
     Prismic.Predicates.at('document.type', 'homepage')
   )
+  const allProducts = await client.query(
+    Prismic.Predicates.at('document.type', 'product')
+  )
   
   return {
     props: {
       allHomepage: JSON.stringify(allHomepage),
+      allProducts: JSON.stringify(allProducts)
     },
   }
 }
